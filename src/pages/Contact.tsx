@@ -19,13 +19,17 @@ const Contact = () => {
   const [categories, setCategories] = useState<Set<string>>(new Set());
   const [showCopyNotification, setShowCopyNotification] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const phoneNumber = '+55 (11) 98100-1712';
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
   const emailAddress = 'export@qualiden.com.br';
+
+  // Safely access environment variables
+  const emailJsServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
+  const emailJsTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
+  const emailJsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -88,9 +92,13 @@ const Contact = () => {
     setSubmitStatus('sending');
 
     try {
+      if (!emailJsServiceId || !emailJsTemplateId || !emailJsPublicKey) {
+        throw new Error('EmailJS environment variables are not set.');
+      }
+
       await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        emailJsServiceId,
+        emailJsTemplateId,
         {
           to_email: emailAddress,
           from_name: formData.name,
@@ -99,7 +107,7 @@ const Contact = () => {
           categories: formData.categories.join(', '),
           message: formData.message,
         },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        emailJsPublicKey
       );
 
       setSubmitStatus('success');
