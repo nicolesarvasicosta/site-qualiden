@@ -20,7 +20,7 @@ const Navbar = () => {
               <img 
                 src="/logo_inteiro.png" 
                 alt="Qualiden Logo" 
-                className="h-36 mt-2" // Added top margin
+                className="h-36 mt-2 object-contain sm:h-20" // Added responsive styling
               />
             </Link>
           </div>
