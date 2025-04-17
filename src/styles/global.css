@@ -1,0 +1,7 @@
+.grid > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures content is spaced evenly */
+  height: 100%; /* Ensures all cards are the same height */
+  min-height: 450px; /* Adjust this value as needed */
+}
