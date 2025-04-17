@@ -4,6 +4,12 @@ import { useSearchParams } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import { contentfulClient, ContentfulCategory } from '../lib/contentful';
 
+// Add this function near the top of your component
+function isValidEmail(email: string) {
+  // Simple RFC 5322 compliant regex for email validation
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 const Contact = () => {
   const [searchParams] = useSearchParams();
   const preselectedCategory = searchParams.get('category');
@@ -21,6 +27,7 @@ const Contact = () => {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [loading, setLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [lastSubmitTime, setLastSubmitTime] = useState<number>(0);
 
   const rawPhoneNumber = '+5511981001712'; // Correct format for WhatsApp
   const whatsappUrl = `https://wa.me/${rawPhoneNumber}`;
@@ -90,6 +97,23 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Email validation
+    if (!isValidEmail(formData.email)) {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 3000);
+      return;
+    }
+
+    // Rate limiting: 30 seconds between submissions
+    const now = Date.now();
+    if (now - lastSubmitTime < 30000) {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 3000);
+      return;
+    }
+    setLastSubmitTime(now);
+
     setSubmitStatus('sending');
 
     try {
@@ -283,6 +307,9 @@ const Contact = () => {
                   >
                     Email
                   </label>
+                  {submitStatus === 'error' && !isValidEmail(formData.email) && (
+                    <div className="mt-2 text-red-600 text-sm">Please enter a valid email address.</div>
+                  )}
                 </div>
 
                 {/* Multi-select Category Dropdown */}

@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowRight, Shield, Globe, TrendingUp } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import LazyImage from '../components/LazyImage';
 import ImageCarousel from '../components/ImageCarousel';
 
 function Home() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === '#about-us') {
+      const el = document.getElementById('about-us');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
+
   const carouselImages = [
     {
       url: "/carousel/qualiden_analise.jpeg",
