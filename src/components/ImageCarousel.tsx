@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface CarouselMedia {
   url: string;
@@ -20,29 +20,27 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   className = ''
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const isVideo = (media: CarouselMedia) => media.type === 'video' || media.url.endsWith('.mp4');
 
-  const nextSlide = useCallback(() => {
+  const nextSlide = () => {
     const currentVideo = videoRefs.current[currentIndex];
     if (currentVideo) {
       currentVideo.pause();
       currentVideo.currentTime = 0;
     }
     setCurrentIndex((current) => (current + 1) % images.length);
-  }, [currentIndex, images.length]);
+  };
 
-  const previousSlide = useCallback(() => {
+  const previousSlide = () => {
     const currentVideo = videoRefs.current[currentIndex];
     if (currentVideo) {
       currentVideo.pause();
       currentVideo.currentTime = 0;
     }
     setCurrentIndex((current) => (current - 1 + images.length) % images.length);
-  }, [currentIndex, images.length]);
+  };
 
   useEffect(() => {
     const currentMedia = images[currentIndex];
@@ -51,15 +49,21 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
       if (video) {
         video.play().catch((error) => {
           console.warn('Autoplay blocked by the browser:', error);
-          setIsVideoPlaying(false);
-          setIsPlaying(true);
         });
       }
     }
-  }, [currentIndex, images]);
+
+    const timer = setTimeout(() => {
+      if (!isVideo(currentMedia)) {
+        nextSlide();
+      }
+    }, interval);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, images, interval]);
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div className={`relative overflow-hidden group ${className}`}>
       {images.map((media, index) => (
         <div
           key={index}
@@ -73,10 +77,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               className="w-full h-full object-cover"
               playsInline
               muted
-              autoPlay
+              autoPlay={index === currentIndex} // Only autoplay the current video
               loop={false}
               preload="metadata"
               poster={media.poster}
+              onEnded={nextSlide} // Move to the next slide when the video ends
             >
               <source src={media.url} type="video/mp4" />
               Your browser does not support the video tag.
@@ -90,15 +95,16 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           )}
         </div>
       ))}
+      {/* Navigation Buttons */}
       <button
         onClick={previousSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"
       >
         &#8249;
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"
       >
         &#8250;
       </button>

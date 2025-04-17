@@ -129,7 +129,7 @@ function Home() {
               <ImageCarousel 
                 images={carouselImages}
                 interval={6000}
-                className="aspect-[16/9]"
+                className="w-full h-[400px] md:h-[500px] object-cover rounded-3xl"
               />
             </div>
           </div>
