@@ -2,8 +2,9 @@ import React from 'react';
 import { Mail, Phone } from 'lucide-react';
 
 const Footer = () => {
-  const phoneNumber = '+55 (11) 98100-1712'; 
-  const whatsappUrl = `https://wa.me/${phoneNumber}`;
+  const rawPhoneNumber = '+5511981001712'; // Correct format for WhatsApp
+  const whatsappUrl = `https://wa.me/${rawPhoneNumber}`;
+  const formattedPhoneNumber = '+55 (11) 98100-1712'; // Display format
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -45,7 +46,7 @@ const Footer = () => {
                 className="flex items-center hover:text-white transition-colors"
               >
                 <Phone className="h-4 w-4 mr-2" /> 
-                {phoneNumber}
+                {formattedPhoneNumber}
               </a>
               <p className="flex items-center">
                 <Mail className="h-4 w-4 mr-2" /> 

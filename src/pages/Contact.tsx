@@ -22,8 +22,9 @@ const Contact = () => {
   const [loading, setLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const phoneNumber = '+55 (11) 98100-1712';
-  const whatsappUrl = `https://wa.me/${phoneNumber}`;
+  const rawPhoneNumber = '+5511981001712'; // Correct format for WhatsApp
+  const whatsappUrl = `https://wa.me/${rawPhoneNumber}`;
+  const formattedPhoneNumber = '+55 (11) 98100-1712'; // Display format
   const emailAddress = 'export@qualiden.com.br';
 
   // Safely access environment variables
@@ -180,23 +181,33 @@ const Contact = () => {
           {/* Contact Information Cards */}
           <div className="space-y-6">
             {/* Phone Card */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block bg-white rounded-2xl p-6 shadow-[0_25px_50px_rgba(0,0,0,0.35)] hover:shadow-[0_35px_60px_rgba(0,0,0,0.45)] transform hover:-translate-y-1 transition-all duration-300"
-            >
-              <div className="flex items-start">
-                <div className="bg-blue-100 rounded-full p-3">
-                  <Phone className="h-6 w-6 text-blue-600" />
+            <div className="relative group">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-white rounded-2xl p-6 shadow-[0_25px_50px_rgba(0,0,0,0.35)] hover:shadow-[0_35px_60px_rgba(0,0,0,0.45)] transform hover:-translate-y-1 transition-all duration-300"
+              >
+                <div className="flex items-start">
+                  <div className="bg-blue-100 rounded-full p-3">
+                    <Phone className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-1">Phone</h3>
+                    <p className="text-gray-600">Available at All Times</p>
+                    <p className="text-blue-600 font-medium mt-2">{formattedPhoneNumber}</p>
+                  </div>
                 </div>
-                <div className="ml-4">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-1">Phone</h3>
-                  <p className="text-gray-600">Available at All Times</p>
-                  <p className="text-blue-600 font-medium mt-2">+55 (11) 98100-1712</p>
+              </a>
+
+              {/* Tooltip */}
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm flex items-center shadow-lg">
+                  <Send className="h-4 w-4 mr-2" />
+                  Click to send a message
                 </div>
               </div>
-            </a>
+            </div>
 
             {/* Email Card */}
             <button
