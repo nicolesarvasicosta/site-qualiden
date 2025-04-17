@@ -227,52 +227,56 @@ const Products = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10 pb-24">
         {!selectedCategory && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {categoriesData.map((category) => (
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Commodities */}
               <div 
-                key={category.name}
-                onClick={() => setSelectedCategory(category.name)}
-                onMouseEnter={() => setHoveredCategory(category.name)}
+                key="Commodities"
+                onClick={() => setSelectedCategory("Commodities")}
+                onMouseEnter={() => setHoveredCategory("Commodities")}
                 onMouseLeave={() => setHoveredCategory(null)}
                 className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2"
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <LazyImage
-                    src={category.image}
-                    alt={category.name}
+                    src="/commodities.jpg"
+                    alt="Commodities"
                     className="absolute inset-0"
                     width={1200}
                     height={675}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
-                  
-                  <div className={`
-                    absolute inset-0 bg-blue-600/20 backdrop-blur-sm transition-opacity duration-300
-                    ${hoveredCategory === category.name ? 'opacity-100' : 'opacity-0'}
-                  `} />
-                  
-                  <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                    <h3 className="text-4xl font-playfair font-bold text-white mb-4 transform transition-all duration-300 group-hover:translate-y-0 translate-y-2">
-                      {category.name}
-                    </h3>
-                    <div className="flex items-center space-x-2 opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                      <span className="text-white text-xl">Explore Category</span>
-                      <ArrowUpRight className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
                 </div>
-                
                 <div className="p-8 bg-white">
-                  <div className="flex justify-between items-center text-lg text-gray-600">
-                    <span>{category.subcategories.length} Subcategories</span>
-                    <span>•</span>
-                    <span>
-                      {category.subcategories.reduce((total, sub) => total + sub.products.length, 0)} Products
-                    </span>
-                  </div>
+                  <h3 className="text-4xl font-playfair font-bold text-gray-900 mb-4">Commodities</h3>
+                  <p className="text-gray-600">High-quality commodities for global markets.</p>
                 </div>
               </div>
-            ))}
+
+              {/* Household & Groceries */}
+              <div 
+                key="Household & Groceries"
+                onClick={() => setSelectedCategory("Household & Groceries")}
+                onMouseEnter={() => setHoveredCategory("Household & Groceries")}
+                onMouseLeave={() => setHoveredCategory(null)}
+                className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2"
+              >
+                <div className="aspect-[16/9] relative overflow-hidden">
+                  <LazyImage
+                    src="/householdgrocery.jpg"
+                    alt="Household & Groceries"
+                    className="absolute inset-0"
+                    width={1200}
+                    height={675}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
+                </div>
+                <div className="p-8 bg-white">
+                  <h3 className="text-4xl font-playfair font-bold text-gray-900 mb-4">Household & Groceries</h3>
+                  <p className="text-gray-600">Essential household items and groceries for everyday needs.</p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

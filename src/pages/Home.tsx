@@ -147,31 +147,7 @@ function Home() {
               </p>
             </div>
             <div className="flex justify-center">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                {/* Household & Groceries */}
-                <div className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2">
-                  <div className="aspect-[16/9] relative overflow-hidden">
-                    <img 
-                      src="/householdgrocery.jpg" 
-                      alt="Household & Groceries" 
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
-                  </div>
-                  <div className="p-8">
-                    <h3 className="text-2xl font-playfair font-semibold text-gray-900 mb-4">Household & Groceries</h3>
-                    <p className="text-gray-600 mb-4">
-                      Essential household items and groceries for everyday needs.
-                    </p>
-                    <Link 
-                      to="/products" 
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      View More
-                    </Link>
-                  </div>
-                </div>
-
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Commodities */}
                 <div className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2">
                   <div className="aspect-[16/9] relative overflow-hidden">
@@ -186,6 +162,30 @@ function Home() {
                     <h3 className="text-2xl font-playfair font-semibold text-gray-900 mb-4">Commodities</h3>
                     <p className="text-gray-600 mb-4">
                       High-quality commodities for global markets.
+                    </p>
+                    <Link 
+                      to="/products" 
+                      className="text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      View More
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Household & Groceries */}
+                <div className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2">
+                  <div className="aspect-[16/9] relative overflow-hidden">
+                    <img 
+                      src="/householdgrocery.jpg" 
+                      alt="Household & Groceries" 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300" />
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-playfair font-semibold text-gray-900 mb-4">Household & Groceries</h3>
+                    <p className="text-gray-600 mb-4">
+                      Essential household items and groceries for everyday needs.
                     </p>
                     <Link 
                       to="/products" 
