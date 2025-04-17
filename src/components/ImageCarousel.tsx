@@ -44,22 +44,30 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
   useEffect(() => {
     const currentMedia = images[currentIndex];
+    let timer: NodeJS.Timeout;
+
     if (isVideo(currentMedia)) {
       const video = videoRefs.current[currentIndex];
       if (video) {
         video.play().catch((error) => {
           console.warn('Autoplay blocked by the browser:', error);
         });
+
+        // Wait for the video to end before transitioning to the next slide
+        video.onended = nextSlide;
       }
+    } else {
+      // For images, use the interval to transition to the next slide
+      timer = setTimeout(nextSlide, interval);
     }
 
-    const timer = setTimeout(() => {
-      if (!isVideo(currentMedia)) {
-        nextSlide();
+    return () => {
+      clearTimeout(timer);
+      const video = videoRefs.current[currentIndex];
+      if (video) {
+        video.onended = null; // Clean up the event listener
       }
-    }, interval);
-
-    return () => clearTimeout(timer);
+    };
   }, [currentIndex, images, interval]);
 
   return (
