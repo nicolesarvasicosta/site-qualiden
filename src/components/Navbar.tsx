@@ -26,7 +26,7 @@ const Navbar = () => {
               <img 
                 src="/logo_inteiro.png" 
                 alt="Qualiden Logo" 
-                className="h-28 w-auto object-contain" // Increased height for better visibility
+                className="h-40 w-auto object-contain md:h-36" // Increased height for desktop and mobile
               />
             </Link>
           </div>
