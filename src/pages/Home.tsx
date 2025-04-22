@@ -74,7 +74,7 @@ function Home() {
             Global Trading <br /> Solutions
           </h1>
           <p className="text-xl text-gray-100 max-w-2xl mb-8">
-            Your trusted partner in international trade. We connect quality products with global markets.
+            Your trusted partner in international trade. <br /> We connect quality products with global markets.
           </p>
           <Link 
             to="/products"
