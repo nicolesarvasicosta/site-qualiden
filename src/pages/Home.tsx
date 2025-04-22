@@ -60,7 +60,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <div className="relative h-[600px] overflow-hidden">
+      <div className="relative h-[600px]">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -69,18 +69,20 @@ function Home() {
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-          <div className="text-white max-w-xl">
-            <h1 className="text-6xl font-playfair font-bold mb-6">Global Trading Solutions</h1>
-            <p className="text-xl mb-8 text-gray-100">Your trusted partner in international trade. We connect quality products with global markets.</p>
-            <Link 
-              to="/products"
-              className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              View Our Products
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left flex flex-col items-start pt-40">
+          <h1 className="text-6xl font-playfair font-bold text-white mb-6">
+            Global Trading Solutions
+          </h1>
+          <p className="text-xl text-gray-100 max-w-2xl mb-8">
+            Your trusted partner in international trade. We connect quality products with global markets.
+          </p>
+          <Link 
+            to="/products"
+            className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            View Our Products
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
         </div>
       </div>
 

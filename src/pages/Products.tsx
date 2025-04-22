@@ -192,9 +192,9 @@ const Products = () => {
     <div className="min-h-screen">
       <div className="relative h-[600px] bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)]" />
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-40">
           {selectedCategory ? (
-            <div className="w-full">
+            <>
               <div className="flex items-center mb-4">
                 <button
                   onClick={() => {
@@ -210,17 +210,19 @@ const Products = () => {
               <h1 className="text-6xl font-playfair font-bold text-white mb-4">
                 {selectedCategory}
               </h1>
-              <p className="text-xl text-gray-100 max-w-2xl">
+              <p className="text-xl text-gray-100 max-w-2xl mx-auto">
                 Browse our selection of {selectedCategory.toLowerCase()}
               </p>
-            </div>
+            </>
           ) : (
-            <div className="w-full">
-              <h1 className="text-6xl font-playfair font-bold text-white mb-6">Our Product Catalog</h1>
-              <p className="text-xl text-gray-100 max-w-2xl">
+            <>
+              <h1 className="text-6xl font-playfair font-bold text-white mb-6 title-center">
+                Our Product Catalog
+              </h1>
+              <p className="text-xl text-gray-100 max-w-2xl mx-auto">
                 Discover our comprehensive range of export products. Quality solutions for global markets.
               </p>
-            </div>
+            </>
           )}
         </div>
       </div>

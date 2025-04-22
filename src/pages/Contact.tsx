@@ -190,13 +190,13 @@ const Contact = () => {
     <div className="min-h-screen">
       <div className="relative h-[600px] bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)]" />
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-          <div className="w-full">
-            <h1 className="text-6xl font-playfair font-bold text-white mb-6">Get in Touch</h1>
-            <p className="text-xl text-gray-100 max-w-2xl">
-              Have questions about our products? We're here to help you connect with global markets.
-            </p>
-          </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-40">
+          <h1 className="text-6xl font-playfair font-bold text-white mb-6 text-center">
+            Get in Touch
+          </h1>
+          <p className="text-xl text-gray-100 max-w-2xl mx-auto">
+            Have questions about our products? We're here to help you connect with global markets.
+          </p>
         </div>
       </div>
 

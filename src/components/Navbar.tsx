@@ -52,12 +52,7 @@ const Navbar = () => {
             >
               Contact
             </Link>
-            <Link 
-              to="/#about-us" // Changed from <a href="#about-us">
-              className="text-white hover:text-blue-200 transition-colors font-medium"
-            >
-              About Us
-            </Link>
+            {/* Removed About Us link */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -99,13 +94,7 @@ const Navbar = () => {
               >
                 Contact
               </Link>
-              <Link 
-                to="/#about-us" // Changed from <a href="#about-us">
-                className="text-gray-900 hover:text-blue-600 transition-colors font-medium"
-                onClick={toggleMobileMenu}
-              >
-                About Us
-              </Link>
+              {/* Removed About Us link */}
             </div>
           </div>
         )}
