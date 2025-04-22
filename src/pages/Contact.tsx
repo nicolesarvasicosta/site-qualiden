@@ -188,9 +188,9 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="relative h-[600px] bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400">
+      <div className="relative h-[600px] bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)]" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-40">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-40 z-10">
           <h1 className="text-6xl font-playfair font-bold text-white mb-6 text-center">
             Get in Touch
           </h1>
@@ -198,6 +198,20 @@ const Contact = () => {
             Have questions about our products? We're here to help you connect with global markets.
           </p>
         </div>
+        {/* Organic SVG shape at the bottom */}
+        <svg
+          className="absolute bottom-0 left-0 w-full h-[120px] z-0"
+          viewBox="0 0 1440 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,100 C400,40 1040,180 1440,60 L1440,120 L0,120 Z"
+            fill="#fff"
+            fillOpacity="1"
+          />
+        </svg>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10 pb-24">

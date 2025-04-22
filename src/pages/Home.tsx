@@ -60,16 +60,21 @@ function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <div className="relative h-[600px]">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
+      <div className="relative h-[600px] overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 w-full h-full z-0"
           style={{
             backgroundImage: "url('/containerimg.jpg')",
-            transform: 'scaleX(-1)'
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            transform: 'scaleX(-1)',
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left flex flex-col items-start pt-40">
+        {/* Dark overlay for better readability */}
+        <div className="absolute inset-0 w-full h-full bg-black/40 z-10" />
+        {/* Main Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left flex flex-col items-start pt-40 z-20">
           <h1 className="text-6xl font-playfair font-bold text-white mb-6">
             Global Trading <br /> Solutions
           </h1>
@@ -84,6 +89,20 @@ function Home() {
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </div>
+        {/* Organic SVG shape at the bottom */}
+        <svg
+          className="absolute bottom-0 left-0 w-full h-[120px] z-10"
+          viewBox="0 0 1440 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,100 Q360,40 720,100 T1440,80 L1440,120 L0,120 Z"
+            fill="#fff"
+            fillOpacity="1"
+          />
+        </svg>
       </div>
 
       {/* Features Section */}
@@ -117,8 +136,8 @@ function Home() {
       </div>
 
       {/* About Us Section */}
-      <div id="about-us" className="py-24 bg-gradient-to-br from-blue-50 via-white to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="about-us" className="py-24 bg-white relative overflow-hidden">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-playfair font-bold text-gray-900 mb-4">About Us</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -126,15 +145,15 @@ function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
-            <div className="space-y-6">
+            <div>
               <h3 className="text-3xl font-playfair font-semibold text-gray-900">Our Story</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg text-gray-700 leading-relaxed mt-4">
                 Since 1992, Qualiden of Brazil has been dedicated to supplying products of the highest quality at the most competitive prices. Our commitment to exceptional service drives us to consistently exceed our customers' expectations.
               </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg text-gray-700 leading-relaxed mt-4">
                 We take immense pride in being recognized as one of Brazil's leading supplying companies. This reputation is built on our continuous effort to enhance our product range and services, ensuring 100% customer satisfaction through close collaboration with our clients.
               </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg text-gray-700 leading-relaxed mt-4">
                 At Qualiden of Brazil, we offer an extensive range of premium products, each selected to provide the best value for your investment. Our unwavering commitment to exceptional service enables us to work closely with our customers, guaranteeing complete satisfaction in every transaction.
               </p>
             </div>
