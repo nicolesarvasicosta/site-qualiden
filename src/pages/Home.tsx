@@ -18,16 +18,6 @@ function Home() {
 
   const carouselImages = [
     {
-      url: "/carousel/qualiden_analise.jpeg",
-      alt: "Qualiden do Brasil",
-      type: "image"
-    },
-    {
-      url: "/carousel/qualiden_carregamento.jpeg",
-      alt: "Nossos Produtos",
-      type: "image"
-    },
-    {
       url: "/carousel/qualiden_project.jpeg",
       alt: "Nossos Projetos",
       type: "image"
@@ -44,10 +34,20 @@ function Home() {
       poster: "/carousel/qualiden_container.jpeg"
     },
     {
+      url: "/carousel/qualiden_carregamento.jpeg",
+      alt: "Nossos Produtos",
+      type: "image"
+    },
+    {
       url: "/carousel/qualiden_carr_container.mp4",
       alt: "Carregamento de Containers",
       type: "video",
       poster: "/carousel/qualiden_carregamento.jpeg"
+    },
+    {
+      url: "/carousel/qualiden_analise.jpeg",
+      alt: "Qualiden do Brasil",
+      type: "image"
     },
     {
       url: "/carousel/qualiden_encomenda.mp4",
