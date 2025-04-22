@@ -71,7 +71,7 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left flex flex-col items-start pt-40">
           <h1 className="text-6xl font-playfair font-bold text-white mb-6">
-            Global Trading Solutions
+            Global Trading <br /> Solutions
           </h1>
           <p className="text-xl text-gray-100 max-w-2xl mb-8">
             Your trusted partner in international trade. We connect quality products with global markets.
