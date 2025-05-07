@@ -64,6 +64,18 @@ const Products = () => {
     navigate(`/contact?category=${encodeURIComponent(subcategory)}`);
   };
 
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setSelectedSubcategory(null); // Reset subcategory when changing category
+    setCurrentPage(1); // Reset to first page
+    setSearchQuery(''); // Optional: reset search query
+  };
+
+  const handleSubcategoryChange = (subcategory: string | null) => {
+    setSelectedSubcategory(subcategory);
+    setCurrentPage(1); // Reset to first page
+  };
+
   const categoriesData = React.useMemo(() => {
     const categoryMap = new Map();
     
@@ -258,7 +270,7 @@ const Products = () => {
               {/* Commodities */}
               <div 
                 key="Commodities"
-                onClick={() => setSelectedCategory("Commodities")}
+                onClick={() => handleCategoryChange("Commodities")}
                 onMouseEnter={() => setHoveredCategory("Commodities")}
                 onMouseLeave={() => setHoveredCategory(null)}
                 className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2"
@@ -282,7 +294,7 @@ const Products = () => {
               {/* Household & Groceries */}
               <div 
                 key="Household & Groceries"
-                onClick={() => setSelectedCategory("Household & Groceries")}
+                onClick={() => handleCategoryChange("Household & Groceries")}
                 onMouseEnter={() => setHoveredCategory("Household & Groceries")}
                 onMouseLeave={() => setHoveredCategory(null)}
                 className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2"
@@ -328,7 +340,7 @@ const Products = () => {
 
             <div className="flex flex-wrap gap-3 justify-center mb-12">
               <button
-                onClick={() => setSelectedSubcategory(null)}
+                onClick={() => handleSubcategoryChange(null)}
                 className={`
                   px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105
                   ${!selectedSubcategory
@@ -341,7 +353,7 @@ const Products = () => {
               {filteredData[0]?.subcategories.sort((a, b) => a.name.localeCompare(b.name)).map((sub) => (
                 <button
                   key={sub.name}
-                  onClick={() => setSelectedSubcategory(sub.name)}
+                  onClick={() => handleSubcategoryChange(sub.name)}
                   className={`
                     px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105
                     ${selectedSubcategory === sub.name
