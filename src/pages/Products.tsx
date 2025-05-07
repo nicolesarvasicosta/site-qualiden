@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, ArrowLeft, Package2, Loader2, CheckCircle, ArrowUpRight } from 'lucide-react';
+import { Search, ArrowLeft, Package2, Loader2, CheckCircle, ArrowUpRight, ArrowRight } from 'lucide-react';
 import { contentfulClient, ContentfulCategory } from '../lib/contentful';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from '../components/LazyImage';
@@ -14,6 +14,8 @@ const Products = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 9;
 
   // Cache for Contentful responses
   const contentfulCache = new Map<string, any>();
@@ -106,7 +108,7 @@ const Products = () => {
 
   function getCategoryImage(categoryName: string): string {
     const images: Record<string, string> = {
-      'Commodities': '/commodities.jpg',
+      'Commodities': '/commodities_qualiden.png',  // Changed from '/commodities.jpg'
       'Household & Groceries': '/householdgrocery.jpg',
       default: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
     };
@@ -114,19 +116,8 @@ const Products = () => {
   }
 
   function getSubcategoryImage(subcategoryName: string): string {
-    const images: Record<string, string> = {
-      'Grains': 'https://images.unsplash.com/photo-1530272279787-89fc3bfd29d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Metals': 'https://images.unsplash.com/photo-1533062618053-d51e617307ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Oil & Gas': 'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Rice': 'https://images.unsplash.com/photo-1568347355280-d33fdf77d42a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Coffee': 'https://images.unsplash.com/photo-1599639957043-f9b160406391?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Beverages': 'https://images.unsplash.com/photo-1596803244535-925769f389fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Fertilizer': 'https://images.unsplash.com/photo-1599401464382-667c2a58fbb6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Bazaar': 'https://images.unsplash.com/photo-1519181245277-cffeb31da2e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      'Cleaning': 'https://images.unsplash.com/photo-1616680213669-92c78de95f16?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-      default: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
-    };
-    return images[subcategoryName] || images.default;
+    const defaultImage = '/logo_inteiro.png';
+    return defaultImage;
   }
 
   function getProductImage(product: any): string {
@@ -166,6 +157,25 @@ const Products = () => {
       subcategories: filteredSubcategories
     }];
   }, [categoriesData, selectedCategory, selectedSubcategory, searchQuery]);
+
+  const paginatedProducts = React.useMemo(() => {
+    const allProducts = filteredData[0]?.subcategories.flatMap(subcategory => 
+      subcategory.products
+    ) || [];
+    
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    
+    return allProducts.slice(startIndex, endIndex);
+  }, [filteredData, currentPage]);
+
+  const totalPages = React.useMemo(() => {
+    const totalProducts = filteredData[0]?.subcategories.flatMap(subcategory => 
+      subcategory.products
+    ).length || 0;
+    
+    return Math.ceil(totalProducts / ITEMS_PER_PAGE);
+  }, [filteredData]);
 
   if (loading) {
     return (
@@ -255,7 +265,7 @@ const Products = () => {
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <LazyImage
-                    src="/commodities.jpg"
+                    src="/commodities_qualiden.png" 
                     alt="Commodities"
                     className="absolute inset-0"
                     width={1200}
@@ -344,9 +354,9 @@ const Products = () => {
               ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredData[0]?.subcategories.flatMap(subcategory => 
-                subcategory.products.map(product => (
+            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {paginatedProducts.map(product => (
                   <div
                     key={product.sys.id}
                     className="group bg-white rounded-3xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
@@ -393,7 +403,48 @@ const Products = () => {
                       </button>
                     </div>
                   </div>
-                ))
+                ))}
+              </div>
+              
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="mt-16 flex items-center justify-center gap-6">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="flex items-center text-gray-500 hover:text-blue-600 disabled:opacity-30 disabled:hover:text-gray-500 transition-colors duration-200"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                    <span className="ml-2 text-sm font-medium">Previous</span>
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`
+                          w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium
+                          transition-all duration-200
+                          ${currentPage === pageNum 
+                            ? 'bg-blue-600 text-white shadow-md' 
+                            : 'text-gray-500 hover:bg-gray-100'}
+                        `}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center text-gray-500 hover:text-blue-600 disabled:opacity-30 disabled:hover:text-gray-500 transition-colors duration-200"
+                  >
+                    <span className="mr-2 text-sm font-medium">Next</span>
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
               )}
             </div>
           </div>
