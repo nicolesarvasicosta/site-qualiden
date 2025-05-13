@@ -31,8 +31,8 @@ function Home() {
       type: "image"
     },
     {
-      url: "/carousel/qualiden_acomp_carregamento.mp4",
-      alt: "Processamento de Açúcar",
+      url: "/carousel/qualiden_cibra_caminhao.mp4",
+      alt: "Caminhão Cibra",
       type: "video",
       poster: "/carousel/qualiden_container.jpeg"
     },
@@ -56,11 +56,22 @@ function Home() {
       url: "/carousel/qualiden_carr_container.mp4",
       alt: "Carregamento de Containers",
       type: "video",
-      poster: "/carousel/qualiden_carregamento.jpeg"
+      poster: "/carousel/qualiden_cibra_container.jpeg"
+    },
+    {
+      url: "/carousel/qualiden_cibra_container.jpeg",
+      alt: "Nossos Produtos",
+      type: "image"
     },
     {
       url: "/carousel/qualiden_cibra.mp4",
       alt: "Cibra",
+      type: "video",
+      poster: "/carousel/qualiden_analise.jpeg"
+    },
+    {
+      url: "/carousel/qualiden_video.mp4",
+      alt: "Qualiden do Brasil",
       type: "video",
       poster: "/carousel/qualiden_analise.jpeg"
     },
@@ -72,6 +83,12 @@ function Home() {
     {
       url: "/carousel/qualiden_encomenda.mp4",
       alt: "Entrega de Produtos",
+      type: "video",
+      poster: "/carousel/qualiden_analise.jpeg"
+    },
+    {
+      url: "/carousel/qualiden_cont_inside.mp4",
+      alt: "Qualiden do Brasil Container",
       type: "video",
       poster: "/carousel/qualiden_analise.jpeg"
     }
