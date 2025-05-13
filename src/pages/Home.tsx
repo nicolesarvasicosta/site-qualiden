@@ -55,7 +55,7 @@ function Home() {
       alt: "Cibra",
       type: "video",
       poster: "/carousel/qualiden_analise.jpeg"
-    }
+    },
     {
       url: "/carousel/qualiden_analise.jpeg",
       alt: "Qualiden do Brasil",
