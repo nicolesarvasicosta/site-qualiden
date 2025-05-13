@@ -129,14 +129,14 @@ function Home() {
         </div>
         {/* Organic SVG shape at the bottom */}
         <svg
-          className="absolute bottom-0 left-0 w-full h-[120px] z-10"
-          viewBox="0 0 1440 120"
+          className="absolute bottom-0 left-0 w-full h-[160px] z-20"
+          viewBox="0 0 1440 160"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio="none"
         >
           <path
-            d="M0,100 Q360,40 720,100 T1440,80 L1440,120 L0,120 Z"
+            d="M0,120 Q360,60 720,120 T1440,100 L1440,160 L0,160 Z"
             fill="#fff"
             fillOpacity="1"
           />
@@ -144,7 +144,7 @@ function Home() {
       </div>
 
       {/* Features Section */}
-      <div className="py-24">
+      <div className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-playfair font-bold text-gray-900 mb-4">Why Choose Us</h2>
