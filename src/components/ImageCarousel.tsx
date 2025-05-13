@@ -20,89 +20,78 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   className = ''
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const isVideo = (media: CarouselMedia) => media.type === 'video' || media.url.endsWith('.mp4');
 
-  const nextSlide = () => {
-    const currentVideo = videoRefs.current[currentIndex];
-    if (currentVideo) {
-      currentVideo.pause();
-      currentVideo.currentTime = 0;
+  // Helper to clear timer
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
     }
+  };
+
+  const nextSlide = () => {
+    clearTimer();
     setCurrentIndex((current) => (current + 1) % images.length);
   };
 
   const previousSlide = () => {
-    const currentVideo = videoRefs.current[currentIndex];
-    if (currentVideo) {
-      currentVideo.pause();
-      currentVideo.currentTime = 0;
-    }
+    clearTimer();
     setCurrentIndex((current) => (current - 1 + images.length) % images.length);
   };
 
   useEffect(() => {
     const currentMedia = images[currentIndex];
-    let timer: NodeJS.Timeout;
-
-    if (isVideo(currentMedia)) {
-      const video = videoRefs.current[currentIndex];
-      if (video) {
-        video.play().catch((error) => {
-          console.warn('Autoplay blocked by the browser:', error);
-        });
-
-        // Wait for the video to end before transitioning to the next slide
-        video.onended = nextSlide;
-      }
-    } else {
-      // For images, use the interval to transition to the next slide
-      timer = setTimeout(nextSlide, interval);
+    clearTimer();
+    if (!isVideo(currentMedia)) {
+      timerRef.current = setTimeout(() => {
+        nextSlide();
+      }, interval);
     }
+    return clearTimer;
+  }, [currentIndex]);
 
-    return () => {
-      clearTimeout(timer);
-      const video = videoRefs.current[currentIndex];
-      if (video) {
-        video.onended = null; // Clean up the event listener
-      }
-    };
-  }, [currentIndex, images, interval]);
+  // Prevent video from resetting on re-render by using a stable key
+  const renderMedia = () => {
+    const media = images[currentIndex];
+    if (isVideo(media)) {
+      return (
+        <video
+          key={`video-${currentIndex}`}
+          ref={el => {
+            videoRef.current = el;
+          }}
+          className="w-full h-full object-cover"
+          playsInline
+          muted
+          autoPlay
+          loop={false}
+          preload="metadata"
+          poster={media.poster}
+          onEnded={nextSlide}
+          controls={false}
+        >
+          <source src={media.url} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else {
+      return (
+        <img
+          src={media.url}
+          alt={media.alt}
+          className="w-full h-full object-cover"
+        />
+      );
+    }
+  };
 
   return (
     <div className={`relative overflow-hidden group ${className}`}>
-      {images.map((media, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${
-            index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
-          }`}
-        >
-          {isVideo(media) ? (
-            <video
-              ref={(el) => (videoRefs.current[index] = el)}
-              className="w-full h-full object-cover"
-              playsInline
-              muted
-              autoPlay={index === currentIndex} // Only autoplay the current video
-              loop={false}
-              preload="metadata"
-              poster={media.poster}
-              onEnded={nextSlide} // Move to the next slide when the video ends
-            >
-              <source src={media.url} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <img
-              src={media.url}
-              alt={media.alt}
-              className="w-full h-full object-cover"
-            />
-          )}
-        </div>
-      ))}
+      {renderMedia()}
       {/* Navigation Buttons */}
       <button
         onClick={previousSlide}

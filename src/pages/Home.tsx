@@ -23,6 +23,12 @@ function Home() {
       type: "image"
     },
     {
+      url: "/carousel/qualiden_acomp_carregamento.mp4",
+      alt: "Processamento de Açúcar",
+      type: "video",
+      poster: "/carousel/qualiden_container.jpeg"
+    },
+    {
       url: "/carousel/qualiden_container.jpeg",
       alt: "Logística Global",
       type: "image"
@@ -44,6 +50,12 @@ function Home() {
       type: "video",
       poster: "/carousel/qualiden_carregamento.jpeg"
     },
+    {
+      url: "/carousel/qualiden_cibra.mp4",
+      alt: "Cibra",
+      type: "video",
+      poster: "/carousel/qualiden_analise.jpeg"
+    }
     {
       url: "/carousel/qualiden_analise.jpeg",
       alt: "Qualiden do Brasil",
