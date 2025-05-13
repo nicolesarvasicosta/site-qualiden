@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent">
+    <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent pt-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           {/* Logo */}
@@ -26,7 +26,7 @@ const Navbar = () => {
               <img 
                 src="/logo_inteiro.png" 
                 alt="Qualiden Logo" 
-                className="h-40 w-auto object-contain md:h-36" // Increased height for desktop and mobile
+                className="h-48 w-auto object-contain md:h-44" // Increased height for desktop and mobile
               />
             </Link>
           </div>

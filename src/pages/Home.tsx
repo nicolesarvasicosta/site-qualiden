@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Shield, Globe, TrendingUp } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import LazyImage from '../components/LazyImage';
@@ -6,6 +6,7 @@ import ImageCarousel from '../components/ImageCarousel';
 
 function Home() {
   const location = useLocation();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     if (location.hash === '#about-us') {
@@ -15,6 +16,13 @@ function Home() {
       }
     }
   }, [location]);
+
+  // Set playback rate for smooth, slow looping
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.playbackRate = 0.6;
+  }, []);
 
   const carouselImages = [
     {
@@ -73,20 +81,21 @@ function Home() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
       <div className="relative h-[600px] overflow-hidden">
-        {/* Background image */}
-        <div
-          className="absolute inset-0 w-full h-full z-0"
-          style={{
-            backgroundImage: "url('/containerimg.jpg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            transform: 'scaleX(-1)',
-          }}
+        {/* Background video with slow playback, no black fade */}
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          src="/container_up.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{ objectFit: 'cover', width: '100%', height: '100%' }}
         />
         {/* Dark overlay for better readability */}
         <div className="absolute inset-0 w-full h-full bg-black/40 z-10" />
         {/* Main Content */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left flex flex-col items-start pt-40 z-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-40 z-20">
           <h1 className="text-6xl font-playfair font-bold text-white mb-6">
             Global Trading <br /> Solutions
           </h1>
