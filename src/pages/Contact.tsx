@@ -35,9 +35,13 @@ const Contact = () => {
   const emailAddress = 'export@qualiden.com.br';
 
   // Safely access environment variables
-  const emailJsServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
-  const emailJsTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
-  const emailJsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
+  const emailJsServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const emailJsTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const emailJsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+  if (!emailJsServiceId || !emailJsTemplateId || !emailJsPublicKey) {
+    console.error('EmailJS environment variables are missing. Please check your .env file.');
+  }
 
   useEffect(() => {
     const fetchCategories = async () => {
