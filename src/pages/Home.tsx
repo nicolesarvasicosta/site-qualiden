@@ -112,7 +112,7 @@ function Home() {
         {/* Dark overlay for better readability */}
         <div className="absolute inset-0 w-full h-full bg-black/40 z-10" />
         {/* Main Content */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-40 z-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center pt-32 sm:pt-40 z-20">
           <h1 className="text-6xl font-playfair font-bold text-white mb-6">
             Global Trading <br /> Solutions
           </h1>
