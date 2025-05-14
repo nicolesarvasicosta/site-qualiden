@@ -25,27 +25,27 @@ function Home() {
   }, []);
 
   const carouselImages = [
-    {
-      url: "/carousel/qualiden_project.jpeg",
-      alt: "Nossos Projetos",
+        {
+      url: "/carousel/qualiden_cibra_container.jpeg",
+      alt: "Nossos Produtos",
       type: "image"
     },
     {
       url: "/carousel/qualiden_cibra_caminhao.mp4",
       alt: "Caminhão Cibra",
       type: "video",
-      poster: "/carousel/qualiden_container.jpeg"
+      poster: "/carousel/qualiden_cibra_container.jpeg"
     },
     {
-      url: "/carousel/qualiden_container.jpeg",
-      alt: "Logística Global",
+      url: "/carousel/qualiden_project.jpeg",
+      alt: "Nossos Projetos",
       type: "image"
     },
     {
       url: "/carousel/qualiden_acucar.mp4",
       alt: "Processamento de Açúcar",
       type: "video",
-      poster: "/carousel/qualiden_container.jpeg"
+      poster: "/carousel/qualiden_cibra_container.jpeg"
     },
     {
       url: "/carousel/qualiden_carregamento.jpeg",
@@ -58,16 +58,16 @@ function Home() {
       type: "video",
       poster: "/carousel/qualiden_cibra_container.jpeg"
     },
-    {
-      url: "/carousel/qualiden_cibra_container.jpeg",
-      alt: "Nossos Produtos",
+   {
+      url: "/carousel/qualiden_container.jpeg",
+      alt: "Logística Global",
       type: "image"
     },
     {
       url: "/carousel/qualiden_cibra.mp4",
       alt: "Cibra",
       type: "video",
-      poster: "/carousel/qualiden_analise.jpeg"
+      poster: "/carousel/qualiden_cibra_container.jpeg"
     },
     {
       url: "/carousel/qualiden_video.mp4",
