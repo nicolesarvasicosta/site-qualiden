@@ -18,8 +18,12 @@ export function initAnalytics() {
   initialized = true;
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = function gtag(...args: GtagArgs) {
-    window.dataLayer.push(args);
+  // gtag.js only recognises the `arguments` object here; pushing a plain array
+  // makes it silently ignore every command.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  window.gtag = function gtag(..._args: GtagArgs) {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer.push(arguments);
   };
 
   const script = document.createElement('script');
