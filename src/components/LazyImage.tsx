@@ -41,23 +41,29 @@ const LazyImage: React.FC<LazyImageProps> = ({
   };
 
   const optimizedSrc = optimizeContentfulImage(src);
-  const placeholderSrc = optimizeContentfulImage(src).replace(`w=${width}`, 'w=20').replace(`h=${height}`, 'h=15');
+  // Only Contentful can serve a tiny version; for other images a "placeholder"
+  // would just download the full file a second time.
+  const hasPlaceholder = optimizedSrc !== src;
+  const placeholderSrc = optimizedSrc.replace(`w=${width}`, 'w=20').replace(`h=${height}`, 'h=15');
 
   return (
-    <div 
-      ref={ref} 
-      className={`relative overflow-hidden ${className}`}
+    <div
+      ref={ref}
+      className={`relative overflow-hidden bg-gray-200 ${className}`}
     >
       {/* Low quality placeholder */}
-      <img
-        src={placeholderSrc}
-        alt={alt}
-        className={`absolute inset-0 w-full h-full object-cover blur-lg scale-110 transition-opacity duration-300 ${
-          isLoaded ? 'opacity-0' : 'opacity-100'
-        }`}
-        loading="lazy"
-      />
-      
+      {hasPlaceholder && (
+        <img
+          src={placeholderSrc}
+          alt=""
+          aria-hidden="true"
+          className={`absolute inset-0 w-full h-full object-cover blur-lg scale-110 transition-opacity duration-300 ${
+            isLoaded ? 'opacity-0' : 'opacity-100'
+          }`}
+          loading="lazy"
+        />
+      )}
+
       {/* Main image */}
       {inView && (
         <img
@@ -67,7 +73,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => setIsLoaded(true)}
-          loading="lazy"
+          decoding="async"
         />
       )}
     </div>

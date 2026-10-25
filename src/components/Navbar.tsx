@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Globe2, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
@@ -24,8 +24,10 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <img 
-                src="/logo_inteiro.png" 
-                alt="Qualiden Logo" 
+                src="/logo_inteiro.webp" 
+                alt="Qualiden Logo"
+                width={512}
+                height={512}
                 className="h-48 w-auto object-contain md:h-44" // Increased height for desktop and mobile
               />
             </Link>

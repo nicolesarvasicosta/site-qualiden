@@ -1,8 +1,34 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, ArrowLeft, Package2, Loader2, CheckCircle, ArrowUpRight, ArrowRight } from 'lucide-react';
-import { contentfulClient, ContentfulCategory } from '../lib/contentful';
+import { Search, ArrowLeft, Loader2, ArrowUpRight, ArrowRight } from 'lucide-react';
+import { getContentfulClient, ContentfulAsset, ContentfulCategory } from '../lib/contentful';
 import { useNavigate } from 'react-router-dom';
 import LazyImage from '../components/LazyImage';
+import { trackEvent } from '../lib/analytics';
+
+interface ProductItem {
+  sys: { id: string };
+  fields: {
+    name: string;
+    category: string;
+    subcategory: string;
+    productMedia?: ContentfulAsset;
+  };
+}
+
+interface SubcategoryData {
+  name: string;
+  image: string;
+  products: ProductItem[];
+}
+
+interface CategoryData {
+  name: string;
+  image: string;
+  subcategories: SubcategoryData[];
+}
+
+// Cache for Contentful responses (module-level so it survives re-renders and remounts)
+const contentfulCache = new Map<string, unknown>();
 
 const Products = () => {
   const navigate = useNavigate();
@@ -13,16 +39,12 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 9;
 
-  // Cache for Contentful responses
-  const contentfulCache = new Map<string, any>();
-
-  const fetchWithCache = useCallback(async (key: string, fetchFn: () => Promise<any>) => {
+  const fetchWithCache = useCallback(async <T,>(key: string, fetchFn: () => Promise<T>): Promise<T> => {
     if (contentfulCache.has(key)) {
-      return contentfulCache.get(key);
+      return contentfulCache.get(key) as T;
     }
 
     const data = await fetchFn();
@@ -35,7 +57,7 @@ const Products = () => {
       try {
         const cacheKey = 'categories';
         const response = await fetchWithCache(cacheKey, () => 
-          contentfulClient.getEntries<ContentfulCategory>({
+          getContentfulClient().getEntries({
             content_type: 'newsite',
             include: 1,
             select: [
@@ -44,11 +66,11 @@ const Products = () => {
               'fields.subcategory',
               'fields.product',
               'fields.productMedia'
-            ].join(',')
+            ]
           })
         );
 
-        setCategories(response.items as ContentfulCategory[]);
+        setCategories(response.items as unknown as ContentfulCategory[]);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching categories:', err);
@@ -60,8 +82,11 @@ const Products = () => {
     fetchCategories();
   }, [fetchWithCache]);
 
-  const handleContactNavigation = (subcategory: string) => {
-    navigate(`/contact?category=${encodeURIComponent(subcategory)}`);
+  const handleContactNavigation = (subcategory: string, productName: string) => {
+    trackEvent('request_quote', { product: productName, subcategory });
+    navigate(
+      `/contact?category=${encodeURIComponent(subcategory)}&product=${encodeURIComponent(productName)}`
+    );
   };
 
   const handleCategoryChange = (category: string) => {
@@ -76,31 +101,37 @@ const Products = () => {
     setCurrentPage(1); // Reset to first page
   };
 
-  const categoriesData = React.useMemo(() => {
-    const categoryMap = new Map();
-    
+  const categoriesData = React.useMemo<CategoryData[]>(() => {
+    const categoryMap = new Map<string, {
+      name: string;
+      image: string;
+      subcategories: Map<string, SubcategoryData>;
+    }>();
+
     categories.forEach(item => {
       const category = item.fields.category;
-      if (!categoryMap.has(category)) {
-        categoryMap.set(category, {
+      let categoryData = categoryMap.get(category);
+      if (!categoryData) {
+        categoryData = {
           name: category,
           image: getCategoryImage(category),
           subcategories: new Map()
-        });
+        };
+        categoryMap.set(category, categoryData);
       }
-      
+
       const subcategory = item.fields.subcategory;
-      const categoryData = categoryMap.get(category);
-      
-      if (!categoryData.subcategories.has(subcategory)) {
-        categoryData.subcategories.set(subcategory, {
+      let subcategoryData = categoryData.subcategories.get(subcategory);
+      if (!subcategoryData) {
+        subcategoryData = {
           name: subcategory,
           products: [],
-          image: getSubcategoryImage(subcategory)
-        });
+          image: getSubcategoryImage()
+        };
+        categoryData.subcategories.set(subcategory, subcategoryData);
       }
-      
-      categoryData.subcategories.get(subcategory).products.push({
+
+      subcategoryData.products.push({
         sys: { id: item.sys.id },
         fields: {
           name: item.fields.product,
@@ -111,8 +142,8 @@ const Products = () => {
       });
     });
 
-    return Array.from(categoryMap.entries()).map(([name, data]) => ({
-      name,
+    return Array.from(categoryMap.values()).map(data => ({
+      name: data.name,
       image: data.image,
       subcategories: Array.from(data.subcategories.values())
     }));
@@ -120,32 +151,24 @@ const Products = () => {
 
   function getCategoryImage(categoryName: string): string {
     const images: Record<string, string> = {
-      'Commodities': '/commodities_qualiden.png',  // Changed from '/commodities.jpg'
-      'Household & Groceries': '/householdgrocery.jpg',
+      'Commodities': '/commodities_qualiden.webp',  // Changed from '/commodities.jpg'
+      'Household & Groceries': '/householdgrocery.webp',
       default: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
     };
     return images[categoryName] || images.default;
   }
 
-  function getSubcategoryImage(subcategoryName: string): string {
-    const defaultImage = '/logo_inteiro.png';
-    return defaultImage;
+  function getSubcategoryImage(): string {
+    return '/logo_inteiro.webp';
   }
 
-  function getProductImage(product: any): string {
-    try {
-      if (product.fields.productMedia && product.fields.productMedia.fields) {
-        const media = product.fields.productMedia;
-        if (media.fields.file && media.fields.file.url) {
-          const url = media.fields.file.url;
-          return url.startsWith('//') ? `https:${url}` : url;
-        }
-      }
-    } catch (error) {
-      console.error('Error getting product image:', error);
+  function getProductImage(product: ProductItem): string {
+    const url = product.fields.productMedia?.fields?.file?.url;
+    if (url) {
+      return url.startsWith('//') ? `https:${url}` : url;
     }
-    
-    return getSubcategoryImage(product.fields.subcategory);
+
+    return getSubcategoryImage();
   }
 
   const filteredData = React.useMemo(() => {
@@ -238,7 +261,7 @@ const Products = () => {
             </>
           ) : (
             <>
-              <h1 className="text-6xl font-playfair font-bold text-white mb-6 title-center">
+              <h1 className="text-6xl font-playfair font-bold text-white mb-6">
                 Our Product Catalog
               </h1>
               <p className="text-xl text-gray-100 max-w-2xl mx-auto">
@@ -271,13 +294,11 @@ const Products = () => {
               <div 
                 key="Commodities"
                 onClick={() => handleCategoryChange("Commodities")}
-                onMouseEnter={() => setHoveredCategory("Commodities")}
-                onMouseLeave={() => setHoveredCategory(null)}
                 className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2"
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <LazyImage
-                    src="/commodities_qualiden.png" 
+                    src="/commodities_qualiden.webp" 
                     alt="Commodities"
                     className="absolute inset-0"
                     width={1200}
@@ -295,13 +316,11 @@ const Products = () => {
               <div 
                 key="Household & Groceries"
                 onClick={() => handleCategoryChange("Household & Groceries")}
-                onMouseEnter={() => setHoveredCategory("Household & Groceries")}
-                onMouseLeave={() => setHoveredCategory(null)}
                 className="group cursor-pointer relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2"
               >
                 <div className="aspect-[16/9] relative overflow-hidden">
                   <LazyImage
-                    src="/householdgrocery.jpg"
+                    src="/householdgrocery.webp"
                     alt="Household & Groceries"
                     className="absolute inset-0"
                     width={1200}
@@ -330,7 +349,10 @@ const Products = () => {
                   type="text"
                   placeholder="Search products..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setIsSearchFocused(false)}
                   className="w-full pl-12 pr-4 py-3 border-2 border-transparent rounded-full focus:outline-none focus:border-blue-500 transition-all duration-300"
@@ -350,7 +372,7 @@ const Products = () => {
               >
                 All Products
               </button>
-              {filteredData[0]?.subcategories.sort((a, b) => a.name.localeCompare(b.name)).map((sub) => (
+              {[...(filteredData[0]?.subcategories ?? [])].sort((a, b) => a.name.localeCompare(b.name)).map((sub) => (
                 <button
                   key={sub.name}
                   onClick={() => handleSubcategoryChange(sub.name)}
@@ -387,7 +409,7 @@ const Products = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleContactNavigation(product.fields.subcategory);
+                            handleContactNavigation(product.fields.subcategory, product.fields.name);
                           }}
                           className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transform hover:scale-110 transition-all duration-300"
                         >
@@ -407,7 +429,7 @@ const Products = () => {
                         </div>
                       </div>
                       <button
-                        onClick={() => handleContactNavigation(product.fields.subcategory)}
+                        onClick={() => handleContactNavigation(product.fields.subcategory, product.fields.name)}
                         className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transform transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium flex items-center justify-center space-x-2"
                       >
                         <span>Request Quote</span>

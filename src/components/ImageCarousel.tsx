@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-interface CarouselMedia {
+export interface CarouselMedia {
   url: string;
   alt: string;
   caption?: string;
@@ -20,7 +20,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   className = ''
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const isVideo = (media: CarouselMedia) => media.type === 'video' || media.url.endsWith('.mp4');
@@ -48,11 +48,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     clearTimer();
     if (!isVideo(currentMedia)) {
       timerRef.current = setTimeout(() => {
-        nextSlide();
+        setCurrentIndex((current) => (current + 1) % images.length);
       }, interval);
     }
     return clearTimer;
-  }, [currentIndex]);
+  }, [currentIndex, images, interval]);
 
   // Prevent video from resetting on re-render by using a stable key
   const renderMedia = () => {

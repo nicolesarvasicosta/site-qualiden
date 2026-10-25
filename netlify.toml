@@ -1,3 +1,25 @@
 [build]
   publish = "dist"
   command = "npm run build"
+
+# Vite output is content-hashed, so it can be cached forever
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Media keeps its filename, so cache for a day rather than forever
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*.mp4"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/carousel/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

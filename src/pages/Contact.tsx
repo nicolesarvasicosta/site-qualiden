@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Phone, Send, CheckCircle, AlertCircle, Loader2, X, ChevronDown } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
-import { contentfulClient, ContentfulCategory } from '../lib/contentful';
+import { getContentfulClient, ContentfulCategory } from '../lib/contentful';
+import { trackEvent } from '../lib/analytics';
 
 // Add this function near the top of your component
 function isValidEmail(email: string) {
@@ -13,6 +14,7 @@ function isValidEmail(email: string) {
 const Contact = () => {
   const [searchParams] = useSearchParams();
   const preselectedCategory = searchParams.get('category');
+  const preselectedProduct = searchParams.get('product');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -46,12 +48,12 @@ const Contact = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await contentfulClient.getEntries<ContentfulCategory>({
+        const response = await getContentfulClient().getEntries({
           content_type: 'newsite',
         });
 
         const uniqueSubcategories = new Set<string>();
-        response.items.forEach(item => {
+        (response.items as unknown as ContentfulCategory[]).forEach(item => {
           if (item.fields.subcategory) {
             uniqueSubcategories.add(item.fields.subcategory);
           }
@@ -75,17 +77,20 @@ const Contact = () => {
       }
 
       const categoriesList = formData.categories.join(', ');
-      return `I am interested in the following categories: ${categoriesList}.\n\nPlease provide details on:\n- Product specifications and pricing\n- Available quantities and minimum orders\n- Delivery terms and timeframes\n- Payment conditions\n\nLooking forward to your response.`;
+      const productLine = preselectedProduct ? `I am interested in: ${preselectedProduct}.\n\n` : '';
+      return `${productLine}I am interested in the following categories: ${categoriesList}.\n\nPlease provide details on:\n- Product specifications and pricing\n- Available quantities and minimum orders\n- Delivery terms and timeframes\n- Payment conditions\n\nLooking forward to your response.`;
     };
 
     setFormData(prev => ({
       ...prev,
       message: generateMessageTemplate(),
-      subject: formData.categories.length > 0 
-        ? `Inquiry about ${formData.categories.join(', ')}`
-        : 'Product Information Request'
+      subject: preselectedProduct && formData.categories.length > 0
+        ? `Inquiry about ${preselectedProduct}`
+        : formData.categories.length > 0
+          ? `Inquiry about ${formData.categories.join(', ')}`
+          : 'Product Information Request'
     }));
-  }, [formData.categories]);
+  }, [formData.categories, preselectedProduct]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -139,6 +144,7 @@ const Contact = () => {
         emailJsPublicKey
       );
 
+      trackEvent('generate_lead', { categories: formData.categories.join(', ') });
       setSubmitStatus('success');
       setFormData({
         name: '',
@@ -228,6 +234,7 @@ const Contact = () => {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackEvent('click_whatsapp', { location: 'contact_page' })}
                 className="block bg-white rounded-2xl p-6 shadow-[0_25px_50px_rgba(0,0,0,0.35)] hover:shadow-[0_35px_60px_rgba(0,0,0,0.45)] transform hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="flex items-start">
@@ -379,6 +386,12 @@ const Contact = () => {
                   {/* Dropdown Menu */}
                   {isDropdownOpen && (
                     <div className="absolute z-10 w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-auto">
+                      {loading && (
+                        <div className="px-4 py-2 text-gray-500 flex items-center">
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Loading categories...
+                        </div>
+                      )}
                       {Array.from(categories).sort().map((category) => (
                         <div
                           key={category}

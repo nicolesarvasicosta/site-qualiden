@@ -1,8 +1,71 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { ArrowRight, Shield, Globe, TrendingUp } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import LazyImage from '../components/LazyImage';
-import ImageCarousel from '../components/ImageCarousel';
+import ImageCarousel, { CarouselMedia } from '../components/ImageCarousel';
+
+const carouselImages: CarouselMedia[] = [
+  {
+    url: "/carousel/qualiden_cibra_container.jpeg",
+    alt: "Nossos Produtos",
+    type: "image"
+  },
+  {
+    url: "/carousel/qualiden_project.jpeg",
+    alt: "Nossos Projetos",
+    type: "image"
+  },
+  {
+    url: "/carousel/qualiden_acucar.mp4",
+    alt: "Processamento de Açúcar",
+    type: "video",
+    poster: "/carousel/qualiden_cibra_container.jpeg"
+  },
+  {
+    url: "/carousel/qualiden_carregamento.jpeg",
+    alt: "Nossos Produtos",
+    type: "image"
+  },
+  {
+    url: "/carousel/qualiden_carr_container.mp4",
+    alt: "Carregamento de Containers",
+    type: "video",
+    poster: "/carousel/qualiden_cibra_container.jpeg"
+  },
+  {
+    url: "/carousel/qualiden_container.jpeg",
+    alt: "Logística Global",
+    type: "image"
+  },
+  {
+    url: "/carousel/qualiden_cibra.mp4",
+    alt: "Cibra",
+    type: "video",
+    poster: "/carousel/qualiden_cibra_container.jpeg"
+  },
+  {
+    url: "/carousel/qualiden_video.mp4",
+    alt: "Qualiden do Brasil",
+    type: "video",
+    poster: "/carousel/qualiden_analise.jpeg"
+  },
+  {
+    url: "/carousel/qualiden_analise.jpeg",
+    alt: "Qualiden do Brasil",
+    type: "image"
+  },
+  {
+    url: "/carousel/qualiden_encomenda.mp4",
+    alt: "Entrega de Produtos",
+    type: "video",
+    poster: "/carousel/qualiden_analise.jpeg"
+  },
+  {
+    url: "/carousel/qualiden_cont_inside.mp4",
+    alt: "Qualiden do Brasil Container",
+    type: "video",
+    poster: "/carousel/qualiden_analise.jpeg"
+  }
+];
 
 function Home() {
   const location = useLocation();
@@ -24,76 +87,6 @@ function Home() {
     video.playbackRate = 0.6;
   }, []);
 
-  const carouselImages = [
-        {
-      url: "/carousel/qualiden_cibra_container.jpeg",
-      alt: "Nossos Produtos",
-      type: "image"
-    },
-    {
-      url: "/carousel/qualiden_cibra_caminhao.mp4",
-      alt: "Caminhão Cibra",
-      type: "video",
-      poster: "/carousel/qualiden_cibra_container.jpeg"
-    },
-    {
-      url: "/carousel/qualiden_project.jpeg",
-      alt: "Nossos Projetos",
-      type: "image"
-    },
-    {
-      url: "/carousel/qualiden_acucar.mp4",
-      alt: "Processamento de Açúcar",
-      type: "video",
-      poster: "/carousel/qualiden_cibra_container.jpeg"
-    },
-    {
-      url: "/carousel/qualiden_carregamento.jpeg",
-      alt: "Nossos Produtos",
-      type: "image"
-    },
-    {
-      url: "/carousel/qualiden_carr_container.mp4",
-      alt: "Carregamento de Containers",
-      type: "video",
-      poster: "/carousel/qualiden_cibra_container.jpeg"
-    },
-   {
-      url: "/carousel/qualiden_container.jpeg",
-      alt: "Logística Global",
-      type: "image"
-    },
-    {
-      url: "/carousel/qualiden_cibra.mp4",
-      alt: "Cibra",
-      type: "video",
-      poster: "/carousel/qualiden_cibra_container.jpeg"
-    },
-    {
-      url: "/carousel/qualiden_video.mp4",
-      alt: "Qualiden do Brasil",
-      type: "video",
-      poster: "/carousel/qualiden_analise.jpeg"
-    },
-    {
-      url: "/carousel/qualiden_analise.jpeg",
-      alt: "Qualiden do Brasil",
-      type: "image"
-    },
-    {
-      url: "/carousel/qualiden_encomenda.mp4",
-      alt: "Entrega de Produtos",
-      type: "video",
-      poster: "/carousel/qualiden_analise.jpeg"
-    },
-    {
-      url: "/carousel/qualiden_cont_inside.mp4",
-      alt: "Qualiden do Brasil Container",
-      type: "video",
-      poster: "/carousel/qualiden_analise.jpeg"
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
@@ -103,6 +96,8 @@ function Home() {
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover z-0"
           src="/container_up.mp4"
+          poster="/container_up_poster.jpg"
+          preload="auto"
           autoPlay
           loop
           muted

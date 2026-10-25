@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, Phone } from 'lucide-react';
 
 const Footer = () => {
@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Logo Column */}
           <div className="flex justify-center md:justify-start">
             <img 
-              src="/logo_inteiro.png" 
+              src="/logo_inteiro.webp" 
               alt="Qualiden Logo" 
               className="h-36 -mt-4" // Moved the logo up with negative top margin
             />
@@ -29,9 +29,9 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-playfair font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="/" className="text-gray-400 hover:text-white">Home</a></li>
-              <li><a href="/products" className="text-gray-400 hover:text-white">Products</a></li>
-              <li><a href="/contact" className="text-gray-400 hover:text-white">Contact</a></li>
+              <li><Link to="/" className="text-gray-400 hover:text-white">Home</Link></li>
+              <li><Link to="/products" className="text-gray-400 hover:text-white">Products</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
             </ul>
           </div>
 
